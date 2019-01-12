@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    </head>
+<body>
+
+    <script type="text/x-template" id="table-template">
+      <div>
+        <table class="table table-hover table-responsive">
+            <thead class="thead-light">
+            <tr>
+                <th v-for="(key, i) in columns"
+                    @click="sortBy(i)"
+                    :class="{ active: sortKey == i }">
+                    {{ key }}
+                    <span class="arrow" :class="sortOrders[i] > 0 ? 'asc' : 'dsc'"> </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(entry, index) in filteredData">
+                    <td v-for="(key, i) in columns">
+                        <input v-model="entry[i]" placeholder='enter the value...'>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+
+        <div class="elements-visible">
+            Showing {{showingData}} of {{elementsShown}} entries
+        </div>
+        <div class="pagination justify-content-end">
+            <div class="page-item number"
+                v-for="i in numPages"
+                :class="[i == currentPage ? 'active' : '']"
+                @click="change_page(i)"><span class="page-link">{{i}}</span></div>
+        </div>
+      </div>   
+    </script>
+        
+    <!-- root element -->
+    <div id="app" class="container">
+        <h3 class="float-left">Data table</h3>
+        <section>
+            <div v-if="loading" class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+            <div v-else>
+                <form id="search" class="form-inline float-right">
+                    <div class="form-group">
+                        <label for="searchField">Search</label>
+                        <input id="searchField" name="query" class="form-control mx-sm-3" 
+                        v-model="searchQuery">
+                    </div>
+                </form>
+                <table-component
+                    :data="tableData"
+                    :columns="tableColumns"
+                    :filter-key="searchQuery"
+                    :elements-per-page="elementsPerPage">
+                </table-component>
+
+            </div>
+        </section>
+    </div>
+    <script src="main.js"></script>
+   
+</body>
+</html>
